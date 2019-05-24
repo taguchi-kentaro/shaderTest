@@ -65,24 +65,24 @@
 
 			fixed4 SampleSpriteTexture (float2 uv)
 			{
-                float2 dotsize = 1/_TextureSize;
-                fixed4 basecol = tex2D(_MainTex, uv); 
-                fixed4 col = float4(0, 0, 0, 0);
-                
-                col += tex2D(_MainTex, uv + dotsize * float2(-1, -1)) * (1.0 / 8);
-                col += tex2D(_MainTex, uv + dotsize * float2(0, -1)) * (1.0 / 8);
-                col += tex2D(_MainTex, uv + dotsize * float2(1, -1)) * (1.0 / 8);
-                col += tex2D(_MainTex, uv + dotsize * float2(-1, 0)) * (1.0 / 8);
-                col += tex2D(_MainTex, uv + dotsize * float2(1, 0)) * (1.0 / 8);
-                col += tex2D(_MainTex, uv + dotsize * float2(-1, 1)) * (1.0 / 8);
-                col += tex2D(_MainTex, uv + dotsize * float2(0, 1)) * (1.0 / 8);
-                col += tex2D(_MainTex, uv + dotsize * float2(1, 1)) * (1.0 / 8);
-                
-                fixed4 ret = abs(basecol - col);
-                float average = (ret.r + ret.g + ret.b);
-                average = 1.0 - average;
-                ret = fixed4(average,average,average,col.a);
-
+				float2 dotsize = 1/_TextureSize;
+				fixed4 basecol = tex2D(_MainTex, uv); 
+				fixed4 col = float4(0, 0, 0, 0);
+				
+				col += tex2D(_MainTex, uv + dotsize * float2(-1, -1)) * (1.0 / 8);
+				col += tex2D(_MainTex, uv + dotsize * float2(0, -1)) * (1.0 / 8);
+				col += tex2D(_MainTex, uv + dotsize * float2(1, -1)) * (1.0 / 8);
+				col += tex2D(_MainTex, uv + dotsize * float2(-1, 0)) * (1.0 / 8);
+				col += tex2D(_MainTex, uv + dotsize * float2(1, 0)) * (1.0 / 8);
+				col += tex2D(_MainTex, uv + dotsize * float2(-1, 1)) * (1.0 / 8);
+				col += tex2D(_MainTex, uv + dotsize * float2(0, 1)) * (1.0 / 8);
+				col += tex2D(_MainTex, uv + dotsize * float2(1, 1)) * (1.0 / 8);
+				
+				fixed4 ret = abs(basecol - col);
+				float average = (ret.r + ret.g + ret.b);
+				average = 1.0 - average;
+				ret = fixed4(average,average,average,col.a);
+				
 				return ret;
 			}
 
