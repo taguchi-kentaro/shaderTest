@@ -69,7 +69,7 @@
 			    fixed4 basecol = tex2D(_MainTex, uv); 
 				fixed4 col = float4(0, 0, 0, 0);
 				
-	            col += tex2D(_MainTex, uv + dotsize * float2(-1, -1)) * (1.0 / 8);
+                col += tex2D(_MainTex, uv + dotsize * float2(-1, -1)) * (1.0 / 8);
                 col += tex2D(_MainTex, uv + dotsize * float2(0, -1)) * (1.0 / 8);
                 col += tex2D(_MainTex, uv + dotsize * float2(1, -1)) * (1.0 / 8);
                 col += tex2D(_MainTex, uv + dotsize * float2(-1, 0)) * (1.0 / 8);

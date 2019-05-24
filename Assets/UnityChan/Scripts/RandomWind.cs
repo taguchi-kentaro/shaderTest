@@ -10,79 +10,69 @@
 //風の方向変化/重力影響を追加.
 //
 
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
 
 namespace UnityChan
 {
-	public class RandomWind : MonoBehaviour
-	{
-		private SpringBone[] springBones;
-		public bool isWindActive = false;
+    public class RandomWind : MonoBehaviour
+    {
+        public float gravity = 0.98f; //重力の強さ.
+        public float interval = 5.0f; // ランダム判定のインターバル.
 
-		private bool isMinus = false;				//風方向反転用.
-		public float threshold = 0.5f;				// ランダム判定の閾値.
-		public float interval = 5.0f;				// ランダム判定のインターバル.
-		public float windPower = 1.0f;				//風の強さ.
-		public float gravity = 0.98f;				//重力の強さ.
-
-
-		// Use this for initialization
-		void Start ()
-		{
-			springBones = GetComponent<SpringManager> ().springBones;
-			StartCoroutine ("RandomChange");
-		}
+        private bool isMinus; //風方向反転用.
+        public bool isWindActive;
+        private SpringBone[] springBones;
+        public float threshold = 0.5f; // ランダム判定の閾値.
+        public float windPower = 1.0f; //風の強さ.
 
 
+        // Use this for initialization
+        private void Start()
+        {
+            springBones = GetComponent<SpringManager>().springBones;
+            StartCoroutine("RandomChange");
+        }
 
 
+        // Update is called once per frame
+        private void Update()
+        {
+            var force = Vector3.zero;
+            if (isWindActive)
+            {
+                if (isMinus)
+                    force = new Vector3(Mathf.PerlinNoise(Time.time, 0.0f) * windPower * -0.001f, gravity * -0.001f, 0);
+                else
+                    force = new Vector3(Mathf.PerlinNoise(Time.time, 0.0f) * windPower * 0.001f, gravity * -0.001f, 0);
 
-		// Update is called once per frame
-		void Update ()
-		{
+                for (var i = 0; i < springBones.Length; i++) springBones[i].springForce = force;
+            }
+        }
 
-			Vector3 force = Vector3.zero;
-			if (isWindActive) {
-				if(isMinus){
-					force = new Vector3 (Mathf.PerlinNoise (Time.time, 0.0f) * windPower * -0.001f , gravity * -0.001f , 0);
-				}else{
-					force = new Vector3 (Mathf.PerlinNoise (Time.time, 0.0f) * windPower * 0.001f, gravity * -0.001f, 0);
-				}
+        private void OnGUI()
+        {
+            var rect1 = new Rect(10, Screen.height - 40, 400, 30);
+            isWindActive = GUI.Toggle(rect1, isWindActive, "Random Wind");
+        }
 
-				for (int i = 0; i < springBones.Length; i++) {
-					springBones [i].springForce = force;
-				}
-			
-			}
-		}
+        // ランダム判定用関数.
+        private IEnumerator RandomChange()
+        {
+            // 無限ループ開始.
+            while (true)
+            {
+                //ランダム判定用シード発生.
+                var _seed = Random.Range(0.0f, 1.0f);
 
-		void OnGUI ()
-		{
-			Rect rect1 = new Rect (10, Screen.height - 40, 400, 30);
-			isWindActive = GUI.Toggle (rect1, isWindActive, "Random Wind");
-		}
+                if (_seed > threshold) //_seedがthreshold以上の時、符号を反転する.
+                    isMinus = true;
+                else
+                    isMinus = false;
 
-		// ランダム判定用関数.
-		IEnumerator RandomChange ()
-		{
-			// 無限ループ開始.
-			while (true) {
-				//ランダム判定用シード発生.
-				float _seed = Random.Range (0.0f, 1.0f);
-
-				if (_seed > threshold) {
-					//_seedがthreshold以上の時、符号を反転する.
-					isMinus = true;
-				}else{
-					isMinus = false;
-				}
-
-				// 次の判定までインターバルを置く.
-				yield return new WaitForSeconds (interval);
-			}
-		}
-
-
-	}
+                // 次の判定までインターバルを置く.
+                yield return new WaitForSeconds(interval);
+            }
+        }
+    }
 }
